@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Advanced Vocabulary — Journal Writing</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Georgia, serif; background: #f8f6f0; color: #2c2c2a; min-height: 100vh; }
+  header { background: #2c2c2a; color: #f8f6f0; padding: 1.8rem 2rem; }
+  header h1 { font-size: 1.5rem; font-weight: normal; letter-spacing: -0.02em; }
+  header p { font-size: 0.85rem; color: #b4b2a9; margin-top: 0.35rem; font-family: sans-serif; }
+  .count-row { display: flex; gap: 8px; margin-top: 0.7rem; flex-wrap: wrap; }
+  .badge { background: #444441; color: #d3d1c7; font-family: sans-serif; font-size: 0.75rem; padding: 3px 10px; border-radius: 999px; }
+  .tabs { display: flex; border-bottom: 1px solid #d3d1c7; background: #fff; padding: 0 1.5rem; overflow-x: auto; }
+  .tab { padding: 0.75rem 1.1rem; font-size: 0.84rem; cursor: pointer; border: none; border-bottom: 2px solid transparent; color: #888780; font-family: sans-serif; background: none; white-space: nowrap; }
+  .tab.active { border-bottom-color: #2c2c2a; color: #2c2c2a; font-weight: 600; }
+  .content { padding: 1.4rem; max-width: 960px; margin: 0 auto; }
+  .search-bar { width: 100%; padding: 9px 14px; border: 1px solid #d3d1c7; border-radius: 8px; font-family: sans-serif; font-size: 0.88rem; margin-bottom: 0.7rem; background: #fff; color: #2c2c2a; }
+  .search-bar:focus { outline: none; border-color: #888780; }
+  .cat-select-row { margin-bottom: 0.6rem; }
+  .cat-select { width:100%; padding: 9px 12px; border: 1px solid #d3d1c7; border-radius: 8px; font-family: sans-serif; font-size: 0.82rem; background: #fff; color: #2c2c2a; }
+  .cat-select:focus { outline: none; border-color: #888780; }
+  .cat-chip-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1rem; align-items:center; }
+  .pill { padding: 5px 12px; border-radius: 999px; font-size: 0.76rem; cursor: pointer; border: 1px solid #d3d1c7; background: #fff; color: #5f5e5a; font-family: sans-serif; }
+  .pill.active { background: #2c2c2a; color: #f8f6f0; border-color: #2c2c2a; }
+  .pill.pinned { border-style: dashed; }
+  .result-count { font-family: sans-serif; font-size: 0.78rem; color: #b4b2a9; margin-bottom: 0.8rem; }
+  .verb-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+  .verb-card { background: #fff; border: 1px solid #e0ded7; border-radius: 10px; padding: 0.85rem 1rem; cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s; border-left: 3px solid #d3d1c7; }
+  .verb-card:hover { border-color: #b4b2a9; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .vc-verb { font-size: 1rem; color: #2c2c2a; margin-bottom: 3px; }
+  .vc-tag { font-size: 0.68rem; font-family: sans-serif; text-transform: uppercase; letter-spacing: 0.09em; margin-bottom: 5px; }
+  .vc-meaning { font-size: 0.79rem; color: #5f5e5a; font-family: sans-serif; line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.38); z-index:100; align-items:center; justify-content:center; padding:1rem; }
+  .modal-overlay.open { display:flex; }
+  .modal { background:#fff; border-radius:14px; padding:1.5rem; max-width:500px; width:100%; max-height:90vh; overflow-y:auto; }
+  .modal-head { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1.1rem; }
+  .modal-verb { font-size:1.55rem; }
+  .modal-close { background:none; border:none; font-size:1.2rem; cursor:pointer; color:#888780; padding:0; }
+  .msec { margin-bottom:0.95rem; }
+  .mlabel { font-size:0.7rem; font-family:sans-serif; text-transform:uppercase; letter-spacing:0.1em; color:#b4b2a9; margin-bottom:3px; }
+  .mtext { font-family:sans-serif; font-size:0.88rem; line-height:1.6; color:#2c2c2a; }
+  .mexample { background:#f8f6f0; border-left:3px solid #d3d1c7; padding:0.55rem 0.8rem; border-radius:0 6px 6px 0; font-style:italic; font-size:0.85rem; color:#444441; font-family:sans-serif; line-height:1.55; margin-top:5px; }
+
+  .quiz-meta { font-family:sans-serif; font-size:0.78rem; color:#b4b2a9; margin-bottom:0.6rem; }
+  .quiz-or { text-align:center; font-family:sans-serif; font-size:0.72rem; color:#b4b2a9; margin:10px 0 6px; text-transform:uppercase; letter-spacing:0.06em; }
+  .quiz-type { display:flex; gap:8px; margin-top:4px; }
+  .type-input { flex:1; padding:10px 14px; border:1px solid #d3d1c7; border-radius:8px; font-family:sans-serif; font-size:0.88rem; background:#fff; color:#2c2c2a; }
+  .type-input:focus { outline:none; border-color:#888780; }
+  .type-input.correct { border-color:#639922; background:#eaf3de; }
+  .type-input.wrong { border-color:#E24B4A; background:#fcebeb; }
+  .q-meanings { margin-top:1rem; display:flex; flex-direction:column; gap:6px; }
+  .qm-item { font-family:sans-serif; font-size:0.8rem; padding:8px 10px; border-radius:8px; border:1px solid #e0ded7; line-height:1.5; }
+  .qm-item.correct { background:#eaf3de; border-color:#c3dba0; }
+  .qm-item.wrong { background:#fcebeb; border-color:#f0bcbb; }
+  .qm-item strong { color:#2c2c2a; }
+  .quiz-box { background:#fff; border-radius:12px; border:1px solid #d3d1c7; padding:1.4rem; margin-bottom:1rem; }
+  .quiz-q { font-size:0.93rem; margin-bottom:1rem; line-height:1.9; font-family:sans-serif; font-style:italic; }
+  .blank { display:inline-block; border-bottom:2px solid #2c2c2a; min-width:110px; text-align:center; font-style:normal; vertical-align:bottom; }
+  .quiz-opts { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .qopt { padding:10px; border:1px solid #d3d1c7; border-radius:8px; font-size:0.84rem; cursor:pointer; text-align:center; font-family:sans-serif; background:#fff; color:#2c2c2a; transition:background 0.12s; }
+  .qopt:hover { background:#f1efe8; }
+  .qopt.correct { background:#eaf3de; border-color:#639922; color:#3B6D11; font-weight:600; }
+  .qopt.wrong { background:#fcebeb; border-color:#E24B4A; color:#A32D2D; }
+  .qfeedback { font-family:sans-serif; font-size:0.85rem; margin-top:0.8rem; min-height:1.3rem; color:#5f5e5a; line-height:1.5; }
+  .quiz-nav { display:flex; justify-content:space-between; align-items:center; }
+  .quiz-nav-btns { display:flex; gap:8px; }
+  .btn:disabled { opacity:0.4; cursor:default; }
+  .btn { padding:8px 18px; border-radius:8px; border:1px solid #d3d1c7; background:#fff; font-family:sans-serif; font-size:0.84rem; cursor:pointer; color:#2c2c2a; }
+  .btn:hover { background:#f1efe8; }
+  .btn-p { background:#2c2c2a; color:#f8f6f0; border-color:#2c2c2a; }
+  .btn-p:hover { background:#444441; }
+  .score { font-family:sans-serif; font-size:0.84rem; color:#5f5e5a; }
+  .sheet-sec { margin-bottom:2rem; }
+  .sheet-title { font-size:0.92rem; font-weight:600; margin-bottom:0.7rem; padding-bottom:0.35rem; border-bottom:1px solid #e0ded7; font-family:sans-serif; }
+  table { width:100%; border-collapse:collapse; font-family:sans-serif; font-size:0.81rem; }
+  th { text-align:left; color:#b4b2a9; font-weight:normal; padding:5px 8px; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.06em; }
+  td { padding:7px 8px; border-top:1px solid #f1efe8; vertical-align:top; }
+  td:first-child { font-style:italic; white-space:nowrap; color:#2c2c2a; width:150px; }
+  td:nth-child(2) { color:#5f5e5a; }
+  td:nth-child(3) { color:#888780; font-size:0.77rem; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Advanced Vocabulary in Journal Writing</h1>
+  <p>Grouped by meaning and nuance, for precise analytical and journalistic writing</p>
+  <div class="count-row">
+    <span class="badge" id="verb-badge">— words</span>
+    <span class="badge" id="cat-badge">— groups</span>
+  </div>
+</header>
+<div class="tabs">
+  <button class="tab active" onclick="showTab('browse')">Browse</button>
+  <button class="tab" onclick="showTab('quiz')">Quiz</button>
+  <button class="tab" onclick="showTab('sheet')">Cheat sheet</button>
+</div>
+<div class="content">
+  <div id="tab-browse">
+    <input class="search-bar" type="text" placeholder="Search words, meanings…" oninput="onSearch(this.value)">
+    <div class="cat-chip-row" id="cat-chip-row"></div>
+    <div class="cat-select-row">
+      <select class="cat-select" id="cat-select" onchange="filterCat(this.value)"></select>
+    </div>
+    <div class="result-count" id="result-count"></div>
+    <div class="verb-grid" id="verb-grid"></div>
+  </div>
+  <div id="tab-quiz" style="display:none">
+    <div class="quiz-meta" id="q-meta"></div>
+    <div class="quiz-box">
+      <div class="quiz-q" id="q-sent"></div>
+      <div class="quiz-opts" id="q-opts"></div>
+      <div class="quiz-or">or type it in</div>
+      <div class="quiz-type" id="q-type">
+        <input type="text" class="type-input" id="q-type-input" placeholder="Type the word or phrase…" autocomplete="off">
+        <button class="btn btn-p" id="q-type-submit" onclick="submitType()">Check</button>
+      </div>
+      <div class="qfeedback" id="q-fb"></div>
+      <div class="q-meanings" id="q-meanings"></div>
+    </div>
+    <div class="quiz-nav">
+      <span class="score" id="q-score">Score: 0 / 0</span>
+      <div class="quiz-nav-btns">
+        <button class="btn" id="q-back" onclick="goBack()" disabled>← Back</button>
+        <button class="btn btn-p" onclick="goNext()">Next →</button>
+      </div>
+    </div>
+  </div>
+  <div id="tab-sheet" style="display:none"></div>
+</div>
+
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="modal-verb" id="m-verb"></span>
+      <button class="modal-close" onclick="document.getElementById('modal').classList.remove('open')">✕</button>
+    </div>
+    <div class="msec"><div class="mlabel">Category</div><div class="mtext" id="m-cat"></div></div>
+    <div class="msec"><div class="mlabel">Meaning &amp; Nuance</div><div class="mtext" id="m-meaning"></div></div>
+    <div class="msec">
+      <div class="mlabel">Example from journal writing</div>
+      <div class="mexample" id="m-ex"></div>
+    </div>
+  </div>
+</div>
+<script>
+const catLabels = __CAT_LABELS__;
+const verbs = __VERBS__;
+
+// deterministic color per category, cycled across a pleasant hue wheel
+const catSlugs = Object.keys(catLabels);
+const catColor = {};
+catSlugs.forEach((slug, i) => {
+  const hue = Math.round((i * 137.508) % 360); // golden angle spread
+  catColor[slug] = { text: `hsl(${hue} 45% 32%)`, border: `hsl(${hue} 55% 55%)` };
+});
+
+let currentCat='all', searchQuery='';
+let quizIdx=0, quizQueue=[];
+
+document.getElementById('verb-badge').textContent = verbs.length + ' words & phrases';
+document.getElementById('cat-badge').textContent = catSlugs.length + ' meaning groups';
+
+// counts per category
+const catCount = {};
+catSlugs.forEach(slug => { catCount[slug] = verbs.filter(x=>x.cat===slug).length; });
+
+const MISC_SLUG = catSlugs.find(s => catLabels[s] === 'Additional Vocabulary');
+
+// top categories by size (excluding the misc bucket), capped at 12
+const popularSlugs = [...catSlugs]
+  .filter(s => s !== MISC_SLUG)
+  .sort((a,b) => catCount[b]-catCount[a])
+  .slice(0, 12);
+
+function pillHtml(slug, label, count) {
+  const active = currentCat===slug ? ' active' : '';
+  return `<button class="pill${active}" onclick="filterCat('${slug}')">${label} (${count})</button>`;
+}
+
+function renderCatChips() {
+  const el = document.getElementById('cat-chip-row');
+  let chips = [];
+  chips.push(`<button class="pill${currentCat==='all'?' active':''}" onclick="filterCat('all')">All (${verbs.length})</button>`);
+  if (MISC_SLUG) chips.push(`<button class="pill pinned${currentCat===MISC_SLUG?' active':''}" onclick="filterCat('${MISC_SLUG}')">${catLabels[MISC_SLUG]} (${catCount[MISC_SLUG]})</button>`);
+  chips.push(...popularSlugs.map(s => pillHtml(s, catLabels[s], catCount[s])));
+  el.innerHTML = chips.join('');
+}
+
+function buildFilter() {
+  const sel = document.getElementById('cat-select');
+  const sorted = [...catSlugs].sort((a,b) => catLabels[a].localeCompare(catLabels[b]));
+  sel.innerHTML = `<option value="all">All groups (${verbs.length})</option>` +
+    sorted.map(slug => `<option value="${slug}">${catLabels[slug]} (${catCount[slug]})</option>`).join('');
+  renderCatChips();
+}
+
+function getFiltered() {
+  return verbs.filter(v => {
+    const mc = currentCat==='all' || v.cat===currentCat;
+    const q = searchQuery.toLowerCase();
+    const ms = !q || v.verb.toLowerCase().includes(q) || v.meaning.toLowerCase().includes(q);
+    return mc && ms;
+  });
+}
+
+function renderGrid() {
+  const f = getFiltered();
+  document.getElementById('result-count').textContent = f.length + ' word' + (f.length!==1?'s':'') + ' shown';
+  document.getElementById('verb-grid').innerHTML = f.map(v => {
+    const i = verbs.indexOf(v);
+    const c = catColor[v.cat];
+    return `<div class="verb-card" style="border-left-color:${c.border}" onclick="openModal(${i})">
+      <div class="vc-verb">${v.verb}</div>
+      <div class="vc-tag" style="color:${c.text}">${catLabels[v.cat]}</div>
+      <div class="vc-meaning">${v.meaning}</div>
+    </div>`;
+  }).join('');
+}
+
+function filterCat(cat) {
+  currentCat=cat;
+  document.getElementById('cat-select').value = cat;
+  renderCatChips();
+  renderGrid();
+}
+
+function onSearch(val) { searchQuery=val; renderGrid(); }
+
+function openModal(i) {
+  const v = verbs[i];
+  const c = catColor[v.cat];
+  document.getElementById('m-verb').textContent = v.verb;
+  document.getElementById('m-cat').innerHTML = `<span style="color:${c.text}">${catLabels[v.cat]}</span>`;
+  document.getElementById('m-meaning').textContent = v.meaning;
+  document.getElementById('m-ex').textContent = '"'+v.ex+'"';
+  document.getElementById('modal').classList.add('open');
+}
+
+function shuffle(a) { return [...a].sort(()=>Math.random()-0.5); }
+
+let quizHistory=[]; // {v, optObjs, answered, chosenText, isCorrect}
+let quizPos=-1;
+
+function startQuiz() {
+  quizQueue=shuffle(verbs); quizIdx=0;
+  quizHistory=[]; quizPos=-1;
+  updateScore();
+  goNext();
+}
+
+function makeEntry() {
+  if(quizIdx>=quizQueue.length){quizIdx=0;quizQueue=shuffle(verbs);}
+  const v=quizQueue[quizIdx]; quizIdx++;
+  const seen = new Set([v.verb.toLowerCase()]);
+  const picks = [];
+  for (const cand of shuffle(verbs)) {
+    if (picks.length>=3) break;
+    const key = cand.verb.toLowerCase();
+    if (!seen.has(key)) { picks.push(cand); seen.add(key); }
+  }
+  return { v, optObjs: shuffle([v, ...picks]), answered:false, chosenText:null, isCorrect:null };
+}
+
+function goNext() {
+  if (quizPos+1 < quizHistory.length) { quizPos++; }
+  else { quizHistory.push(makeEntry()); quizPos=quizHistory.length-1; }
+  renderEntry();
+}
+
+function goBack() {
+  if (quizPos>0) { quizPos--; renderEntry(); }
+}
+
+function updateScore() {
+  const answered = quizHistory.filter(e=>e.answered);
+  const correct = answered.filter(e=>e.isCorrect);
+  document.getElementById('q-score').textContent = 'Score: '+correct.length+' / '+answered.length;
+}
+
+function renderEntry() {
+  const entry = quizHistory[quizPos];
+  const v = entry.v;
+  document.getElementById('q-fb').textContent='';
+  document.getElementById('q-meanings').innerHTML='';
+  document.getElementById('q-meta').textContent='Question '+(quizPos+1)+' · '+verbs.length+' words in pool';
+  document.getElementById('q-sent').innerHTML='"'+v.qs+'"';
+  document.getElementById('q-back').disabled = quizPos<=0;
+
+  const optsEl = document.getElementById('q-opts');
+  const typeInput = document.getElementById('q-type-input');
+  typeInput.value = entry.chosenText && !isOptionText(entry) ? entry.chosenText : '';
+  typeInput.classList.remove('correct','wrong');
+  typeInput.disabled=false;
+  document.getElementById('q-type-submit').disabled=false;
+  typeInput.onkeydown = (e) => { if(e.key==='Enter') submitType(); };
+
+  optsEl.innerHTML = entry.optObjs.map(()=>'<button class="qopt"></button>').join('');
+  [...optsEl.children].forEach((btn, idx) => {
+    btn.textContent = entry.optObjs[idx].verb;
+    btn.style.pointerEvents='';
+    btn.addEventListener('click', () => checkQ(entry.optObjs[idx].verb));
+  });
+
+  if (entry.answered) {
+    showAnsweredState(entry);
+  }
+}
+
+function isOptionText(entry) {
+  return entry.optObjs.some(o => o.verb.toLowerCase()===  (entry.chosenText||'').toLowerCase());
+}
+
+function lockAnswering() {
+  document.querySelectorAll('.qopt').forEach(b => b.style.pointerEvents='none');
+  document.getElementById('q-type-input').disabled=true;
+  document.getElementById('q-type-submit').disabled=true;
+}
+
+function showAnsweredState(entry) {
+  lockAnswering();
+  const correct = entry.v.verb;
+  document.querySelectorAll('.qopt').forEach(b=>{
+    if(b.textContent===correct) b.classList.add('correct');
+    else if(entry.chosenText && b.textContent.toLowerCase()===entry.chosenText.toLowerCase() && !entry.isCorrect) b.classList.add('wrong');
+  });
+  const typeInput = document.getElementById('q-type-input');
+  if (entry.chosenText && !isOptionText(entry)) {
+    typeInput.value = entry.chosenText;
+    typeInput.classList.add(entry.isCorrect?'correct':'wrong');
+  }
+  document.getElementById('q-fb').innerHTML = entry.isCorrect
+    ? '✓ Correct!'
+    : `✗ Answer: <strong>${correct}</strong>`;
+  renderMeanings(entry);
+}
+
+function renderMeanings(entry) {
+  const chosenLower = (entry.chosenText||'').trim().toLowerCase();
+  const el = document.getElementById('q-meanings');
+  el.innerHTML = entry.optObjs.map(o => {
+    const isCorrect = o.verb.toLowerCase()===entry.v.verb.toLowerCase();
+    const isChosenWrong = !isCorrect && o.verb.toLowerCase()===chosenLower;
+    const cls = isCorrect ? 'correct' : (isChosenWrong ? 'wrong' : '');
+    return `<div class="qm-item ${cls}"><strong>${o.verb}</strong> — ${o.meaning}</div>`;
+  }).join('');
+}
+
+function checkQ(chosen) {
+  const entry = quizHistory[quizPos];
+  if(entry.answered) return;
+  entry.answered=true;
+  entry.chosenText=chosen;
+  entry.isCorrect = chosen.toLowerCase()===entry.v.verb.toLowerCase();
+  updateScore();
+  showAnsweredState(entry);
+}
+
+function submitType() {
+  const entry = quizHistory[quizPos];
+  if(entry.answered) return;
+  const input = document.getElementById('q-type-input');
+  const typed = input.value.trim();
+  if(!typed) return;
+  // accept the exact word/phrase anywhere within a longer typed sentence
+  const escaped = entry.v.verb.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const pattern = new RegExp('\\b'+escaped+'\\b', 'i');
+  entry.answered=true;
+  entry.chosenText=typed;
+  entry.isCorrect = pattern.test(typed);
+  updateScore();
+  showAnsweredState(entry);
+}
+
+function renderSheet() {
+  const el=document.getElementById('tab-sheet');
+  const sorted = [...catSlugs].sort((a,b) => catLabels[a].localeCompare(catLabels[b]));
+  el.innerHTML=sorted.map(slug=>{
+    const list=verbs.filter(v=>v.cat===slug);
+    if(!list.length) return '';
+    return `<div class="sheet-sec">
+      <div class="sheet-title">${catLabels[slug]} (${list.length})</div>
+      <table>
+        <tr><th>Word / phrase</th><th>Meaning</th></tr>
+        ${list.map(v=>`<tr><td>${v.verb}</td><td>${v.meaning}</td></tr>`).join('')}
+      </table>
+    </div>`;
+  }).join('');
+}
+
+function showTab(name) {
+  ['browse','quiz','sheet'].forEach(t=>document.getElementById('tab-'+t).style.display=t===name?'':'none');
+  document.querySelectorAll('.tab').forEach((b,i)=>b.classList.toggle('active',['browse','quiz','sheet'][i]===name));
+  if(name==='quiz') startQuiz();
+  if(name==='sheet') renderSheet();
+}
+
+buildFilter();
+renderGrid();
+startQuiz();
+</script>
+</body>
+</html>
